@@ -1,0 +1,1 @@
+Carpeta para almacenar las librerías usadas por el SW de Arduino
