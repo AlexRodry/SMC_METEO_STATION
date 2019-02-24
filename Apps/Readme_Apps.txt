@@ -1,0 +1,1 @@
+Carpeta para guardar archivos de C# u otras soluciones para crear aplicaciones .exe para acceder o visualizar los datos

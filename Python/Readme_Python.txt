@@ -1,0 +1,1 @@
+Carpeta para guardar archivos de Python que enviaran desde la RaspBerry los datos a la base de datos

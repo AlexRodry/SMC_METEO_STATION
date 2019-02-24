@@ -1,0 +1,1 @@
+Carpeta para guardar archivos de Arduino que leeran los sensores.
