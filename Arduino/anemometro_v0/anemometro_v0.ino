@@ -1,53 +1,75 @@
+#include <TimerOne.h>
+
+volatile int CuentaAne = 0;
+volatile int CuentaAne250ms = 0;
+volatile int CuentaAne3s = 0;
+volatile int CuentaAne10min = 0;
+float rev3s;
+float Media3s;
+float Media10min = 0;
+float Media1h = 0;
+boolean EnviarMedia3s = false;
+boolean EnviarMedia10min = false;
+boolean EnviarMedia1h = false;
+
 void setup() {
   Serial.begin(9600);
+  Timer1.initialize(250000); // Salta el timer 1 cada 250 ms
+  Timer1.attachInterrupt(tiempo_ane); // Salta la función tiempo_ane a la frecuencia indicada antes
+  attachInterrupt(0, Ane, RISING); // Asigna la interrupción 0 (pin D2) a la función Ane cuando detecta un flanco de subida
 }
 
 void loop() {
-  float v = anemometro();
-  String cad = String(v) + " km/h"; 
-  Serial.println(cad);
+  
+  //Serial.println(CuentaAne250ms);
+  //Serial.println(CuentaAne3s);
+  //Serial.println(CuentaAne10min);
+  //Serial.println(CuentaAne);
+  //Serial.println(media3s);
+  if (EnviarMedia3s == true){ // Si se activa la lectura de la media de 3 segundos...
+    Serial.print("Media 3s: "); // Se imprime el valor de la media de los 3 segundos
+    Serial.println(Media3s);
+    EnviarMedia3s = false; // Se desactiva la lectura de la media de los 3 segundos
+  }
+  if (EnviarMedia10min == true){ // Si se activa la lectura de los 10 minutos...
+    Serial.print("Media 10min: "); // Se imprime el valor de la media de los 10 minutos
+    Serial.println(Media10min);
+    EnviarMedia10min = false; // Se desactiva la lectura de la media de los 10 minutos
+    Media10min = 0; // Se reinica el valor de la media de los 10 minutos
+  }
+  if (EnviarMedia1h == true){ // Si se activa la lectura de la hora...
+    Serial.print("Media 1h: "); // Se imprime el valor de la media de la hora
+    Serial.println(Media1h);
+    EnviarMedia1h = false; // Se desactiva la lectura de la media de la hora
+    Media1h = 0; // Se reinica el valor de la media de la hora
+  }
 }
 
-/* 
- * La función anemómetro mide la velocidad del viento en km/h. Para ello se debe definir previamente
- * el pin analógico al que se conectará el anemómetro en la placa de Aurduino. La función devuelve 
- * un valor de velocidad de tipo float.
- */
-int pinAne = 7; // Pin analógico al que se conectará el anemómetro
-float anemometro(){
-  unsigned long comienzo_anemometro = millis(); // Inicio contador de tiempo
-  int vueltas = 0; // Se inicializa una variable que cuente las vueltas
-  int estado1; // Se inicializa una variable de estado
-  // Se usa un bucle para que la función se ejecute durante un tiempo determinado (5 segundos)
-  while (abs(millis() - comienzo_anemometro) <= 5000){
-    /* Para poder detectar cada vuelta se simula un biestable en el que se crea un estado que corresponde con
-       estar bien cercano al interruptor magnético o bien alejado, es decir, poder contar una vuelta o no
-    */
-    if(analogRead(pinAne) >= 1020){
-      estado1 = 0;
-      delay(10);
-    }
-    else{
-      estado1 = 1;
-      delay(10);
-    }
-    // Las vueltas se contarán cuando se parta de un estado de lejanía al interruptor y se llegue a un valor de 
-    if((analogRead(pinAne) < 1020)&&(estado1 == 0)){
-      vueltas++; // Se incrementa el número de vueltas de uno en uno
-      /* Para poder registrar vientos de hasta 48 km/h se deben poder captar hasta 20 vueltas por segundo
-       por lo que se deberá contar cada 50 milisegundos como mucho */
-      delay(50);
-    }
+void tiempo_ane(){
+  CuentaAne250ms++; // Se incrementa la variable cuendo se activa la función, es decir, cada 250 milisegundos
+  if (CuentaAne250ms == 12){ // Cuando el timer alcanza 12 pulsos (3 segundos)...
+    CuentaAne3s++; // Se aumenta el contador de 3 segundos
+    CuentaAne250ms = 0; // La cuenta de 250 milisegundos se reinicia
+    rev3s = ((float)CuentaAne)/(2*3); // Se calcula el número de revoluciones por segundo que se han medido en los 3 segundos (teniendo en cuenta que hay dos pulsos por vuelta)
+    Media3s = 2.4*rev3s; // Se realiza la equivalencia de revoluciones por segundo a kilómetros por hora. 1 revolución por segundo corresponde a 2.4 km/h
+    EnviarMedia3s = true; // Se activa la lectura de la media de los 3 segundos
+    Media10min = Media10min + Media3s; // Se acumula el valor de las medias de 3 segundos para hacer una media de los 10 minutos
+    CuentaAne = 0; // Se reinicia la cuenta de vueltas del anemómetro
   }
-  unsigned long fin_anemometro = millis(); // Contador de final de tiempo
-  unsigned long tiempo = (fin_anemometro - comienzo_anemometro)/1000; // Tiempo en el que la función está midiendo en segundos
-  //Serial.println(tiempo); // Comprobación de que la función mide durante 5 segundos
-  //Serial.println(vueltas); // Comprobación de que la función cuenta las vueltas
-  // Una vuelta por segundo corresponde a 2.4 km/h
-  float tiempofloat = (float)tiempo; // Paso del tiempo de tipo unsigned long a float
-  float velocidad_unitaria = (vueltas/2)/tiempofloat; // Cálculo de vueltas por segundo que se han dado en los 5 segundos de medida
-  //Serial.println(velocidad_unitaria); // Comprobación de que se está calculando bien la velocidad unitaria
-  float velocidad = 2.4*velocidad_unitaria; // Cáculo de la velocidad del viento
-  //Serial.println(velocidad); // Comprobación de que se está calculando bien la velocidad
-  return velocidad; // Se devuelve el valor de velocidad calculado por la función
+  if (CuentaAne3s == 200){ // Cuando la cuenta de los 3 segundos llega a 200, es decir, a 10 minutos...
+    CuentaAne10min++; // Se incrementa el contador de los 10 minutos
+    Media10min = Media10min/200; // Se hace la media de los 200 valores acumulados de la media de 3 segundos
+    Media1h = Media1h + Media10min; // Se acumula el valor medio de cada 10 minutos para calcular la media de la hora
+    EnviarMedia10min = true; // Se activa la lectura de la media de los 10 minutos
+    CuentaAne3s = 0; // Se reinicia la cuenta de los 3 segundos
+  }
+  if (CuentaAne10min == 6){ // Cuando la cuenta de los 10 minutos ha llegado a 6, es decir, a 1 hora...
+    Media1h = Media1h/6; // Se hace la media de los 6 valores acumulados de la media de 10 minutos
+    EnviarMedia1h = true; // Se activa la lectura de la media de la hora
+    CuentaAne10min = 0; // Se reinicia la cuenta de los 10 minutos
+  }
+}
+
+void Ane(){
+  CuentaAne++; // Se incrementa el número de pulsos detectados
 }
