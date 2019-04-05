@@ -1,4 +1,10 @@
+#include <DS3231.h>
+DS3231 clock;
+RTCDateTime dt;
 #include <TimerOne.h>
+#include <Wire.h>
+#include "SparkFunBME280.h"
+BME280 mySensor;
 // Contadores
 volatile int CuentaPlu = 0;
 volatile int CuentaAne = 0;
@@ -23,6 +29,7 @@ float MediaAne10min = 0;
 float MediaAne1h = 0;
 // Accionadores de lectura
 boolean EnviarMediaAne3s = false;
+boolean EnviarMediaAne1min = false;
 boolean EnviarMediaAne10min = false;
 boolean EnviarMediaAne1h = false;
 boolean EnviarMediaPlu3h = false;
@@ -37,10 +44,14 @@ void setup() {
   Timer1.attachInterrupt(tiempo_ane); // Salta la función tiempo_ane a la frecuencia indicada antes
   attachInterrupt(0, Ane, RISING); // Asigna la interrupción 0 (pin D2) a la función Ane cuando detecta un flanco de subida
   attachInterrupt(1, Plu, RISING); // Asigna la interrupción 1 (pin D3) a la función Plu cuando detecta un flanco de subida
+  Wire.begin();
+  clock.begin();
+  clock.setDateTime(2019,04,05,9,10,00);
 }
 
 void loop() {
-  if (EnviarMediaAne3s == true){ // Si se activa la lectura de la media del anemómetro de 3 segundos...
+  
+    if (EnviarMediaAne3s == true){ // Si se activa la lectura de la media del anemómetro de 3 segundos...
     // ------------ Anemómetro ---------------
     Serial.print("Media anemometro 3s: "); // Se imprime el valor de la media del anemómetro de los 3 segundos
     Serial.println(MediaAne3s);
@@ -49,6 +60,21 @@ void loop() {
     Serial.print("Media veleta 3s: "); // Se imprime el valor de la media de la veleta de 3 segundos
     Serial.println(MediaVel3s);
     MediaVel3s = 0; // Se reinicia el valor acumulado de la media de la veleta de 3 segundos
+    dt = clock.getDateTime();
+    Serial.print(dt.year);Serial.print("-");Serial.print(dt.month);Serial.print("-");Serial.print(dt.day);Serial.print("/");
+    Serial.print(dt.hour);Serial.print(":");Serial.print(dt.minute);Serial.print(":");Serial.println(dt.second);
+  }
+  if (EnviarMediaAne1min == true){ // Si se activa la lectura del BME280...
+    Serial.println("LLEGA A 1 MIN");
+    Serial.print("Humidity: ");
+    Serial.println(mySensor.readFloatHumidity(), 0);
+    Serial.print(" Pressure: ");
+    Serial.println(mySensor.readFloatPressure(), 0);
+    Serial.print(" Alt: ");
+    Serial.println(mySensor.readFloatAltitudeMeters(), 1);
+    Serial.print(" Temp: ");
+    Serial.println(mySensor.readTempC(), 2);
+    EnviarMediaAne1min = false;
   }
   if (EnviarMediaAne10min == true){ // Si se activa la lectura del anemómetro de los 10 minutos...
     // ------------ Anemómetro ---------------
@@ -88,6 +114,7 @@ void loop() {
     EnviarMediaPlu1d == false; // Se desactiva la lectura de la media del pluviómetro de 1 día
     MediaPlu1d = 0; // Se reinicia la media del pluviómetro de 1 día
   }
+  
 }
 
 void tiempo_ane(){
@@ -117,6 +144,7 @@ void tiempo_ane(){
     MediaVel10min = MediaVel10min + MediaVel1min; // Se acumulan valores de la media de la veleta de 1 minuto para calcular la media de 10 minutos
     MediaVel1min = 0; // Se reinicia la media de la veleta de 1 minuto
     // ------------ BME280 ---------------
+    EnviarMediaAne1min == true;
   }
   if (CuentaAne1min == 10){ // Cuando la cuenta del anemómetro de 1 minuto llega a 10, es decir, a 10 minutos...
     // ------------ Anemómetro ---------------
