@@ -15,27 +15,27 @@ volatile int CuentaAne10min = 0;
 volatile int CuentaAne1h;
 volatile int CuentaAne3h;
 // Variables de cálculo
-int MediaVel3s;
-float MediaVel1min = 0;
-float MediaVel10min;
-float MediaVel1h;
-float MediaPlu1h;
-float MediaPlu3h;
-float MediaPlu1d;
-float rev3s;
-float MediaAne3s;
-float MediaAne1min = 0;
-float MediaAne10min = 0;
-float MediaAne1h = 0;
+volatile int MediaVel3s;
+volatile float MediaVel1min = 0;
+volatile float MediaVel10min;
+volatile float MediaVel1h;
+volatile float MediaPlu1h;
+volatile float MediaPlu3h;
+volatile float MediaPlu1d;
+volatile float rev3s;
+volatile float MediaAne3s;
+volatile float MediaAne1min = 0;
+volatile float MediaAne10min = 0;
+volatile float MediaAne1h = 0;
 // Accionadores de lectura
-boolean EnviarMediaAne3s = false;
-boolean EnviarMediaAne1min = false;
-boolean EnviarMediaAne10min = false;
-boolean EnviarMediaAne1h = false;
-boolean EnviarMediaPlu3h = false;
-boolean EnviarMediaPlu1d = false;
-boolean EnviarMediaVel1min = false;
-boolean EnviarMediaVel10min = false;
+volatile boolean EnviarMediaAne3s = false;
+volatile boolean EnviarMediaAne1min = false;
+volatile boolean EnviarMediaAne10min = false;
+volatile boolean EnviarMediaAne1h = false;
+volatile boolean EnviarMediaPlu3h = false;
+volatile boolean EnviarMediaPlu1d = false;
+volatile boolean EnviarMediaVel1min = false;
+volatile boolean EnviarMediaVel10min = false;
 
 
 void setup() {
@@ -47,6 +47,11 @@ void setup() {
   Wire.begin();
   clock.begin();
   clock.setDateTime(2019,04,05,9,10,00);
+  if (mySensor.beginI2C() == false) //Begin communication over I2C
+  {
+    Serial.println("The sensor did not respond. Please check wiring.");
+    while(1); //Freeze
+  }
 }
 
 void loop() {
@@ -65,15 +70,12 @@ void loop() {
     Serial.print(dt.hour);Serial.print(":");Serial.print(dt.minute);Serial.print(":");Serial.println(dt.second);
   }
   if (EnviarMediaAne1min == true){ // Si se activa la lectura del BME280...
-    Serial.println("LLEGA A 1 MIN");
-    Serial.print("Humidity: ");
-    Serial.println(mySensor.readFloatHumidity(), 0);
-    Serial.print(" Pressure: ");
-    Serial.println(mySensor.readFloatPressure(), 0);
-    Serial.print(" Alt: ");
-    Serial.println(mySensor.readFloatAltitudeMeters(), 1);
-    Serial.print(" Temp: ");
-    Serial.println(mySensor.readTempC(), 2);
+    Serial.print("Humidity:");Serial.print(mySensor.readFloatHumidity(), 0);Serial.print("/Pressure:");Serial.print(mySensor.readFloatPressure(), 0);
+    Serial.print("/Alt:");Serial.print(mySensor.readFloatAltitudeMeters(), 1);Serial.print("/Temp:");Serial.println(mySensor.readTempC(), 2);
+    // ------------ Reloj ---------------
+    dt = clock.getDateTime();
+    Serial.print(dt.year);Serial.print("-");Serial.print(dt.month);Serial.print("-");Serial.print(dt.day);Serial.print("/");
+    Serial.print(dt.hour);Serial.print(":");Serial.print(dt.minute);Serial.print(":");Serial.println(dt.second);
     EnviarMediaAne1min = false;
   }
   if (EnviarMediaAne10min == true){ // Si se activa la lectura del anemómetro de los 10 minutos...
@@ -86,6 +88,10 @@ void loop() {
     Serial.print("Media veleta 10 min: "); // Se imprime el valor de la media de la veleta de los 10 minutos
     Serial.println(MediaVel10min);
     MediaVel10min = 0; // Se reinicia la media de la veleta de 10 minutos
+    // ------------ Reloj ---------------
+    dt = clock.getDateTime();
+    Serial.print(dt.year);Serial.print("-");Serial.print(dt.month);Serial.print("-");Serial.print(dt.day);Serial.print("/");
+    Serial.print(dt.hour);Serial.print(":");Serial.print(dt.minute);Serial.print(":");Serial.println(dt.second);
   }
   if (EnviarMediaAne1h == true){ // Si se activa la lectura del anemómetro de 1 hora...
     // ------------ Anemómetro ---------------
@@ -101,18 +107,32 @@ void loop() {
     Serial.print("Media pluviómetro 1 h: "); // Se imprime el valor de la media del pluviómetro de 1 hora
     Serial.println(MediaPlu1h);
     MediaPlu1h = 0; // Se reinica el valor de la media del pluviómetro de 1 hora
+    // ------------ Reloj ---------------
+    dt = clock.getDateTime();
+    Serial.print(dt.year);Serial.print("-");Serial.print(dt.month);Serial.print("-");Serial.print(dt.day);Serial.print("/");
+    Serial.print(dt.hour);Serial.print(":");Serial.print(dt.minute);Serial.print(":");Serial.println(dt.second);
   }
   if (EnviarMediaPlu3h == true){ // Si se activa la lectura de la media del pluviómetro de las 3 horas...
+    // ------------ Pluviómetro ---------------
     Serial.print("Media pluviómetro 3 h: "); // Se imprime el valor de la media del poluviómetro de las 3 horas
     Serial.println(MediaPlu3h);
     EnviarMediaPlu3h == false; // Se desactiva la lectura de la media del pluviómetro de las 3 horas
     MediaPlu3h = 0; // Se reinicia el valor de la media del pluviómetro de las 3 horas
+    // ------------ Reloj ---------------
+    dt = clock.getDateTime();
+    Serial.print(dt.year);Serial.print("-");Serial.print(dt.month);Serial.print("-");Serial.print(dt.day);Serial.print("/");
+    Serial.print(dt.hour);Serial.print(":");Serial.print(dt.minute);Serial.print(":");Serial.println(dt.second);
   }
   if (EnviarMediaPlu1d == true){ // Si se activa la lectura de la media del pluviómetro de 1 día...
+    // ------------ Pluviómetro ---------------
     Serial.print("Media pluviómetro 1 día: "); // Se imprime el valor de la media del pluviómetro de 1 día
     Serial.println(MediaPlu1d);
     EnviarMediaPlu1d == false; // Se desactiva la lectura de la media del pluviómetro de 1 día
     MediaPlu1d = 0; // Se reinicia la media del pluviómetro de 1 día
+    // ------------ Reloj ---------------
+    dt = clock.getDateTime();
+    Serial.print(dt.year);Serial.print("-");Serial.print(dt.month);Serial.print("-");Serial.print(dt.day);Serial.print("/");
+    Serial.print(dt.hour);Serial.print(":");Serial.print(dt.minute);Serial.print(":");Serial.println(dt.second);
   }
   
 }
@@ -144,7 +164,7 @@ void tiempo_ane(){
     MediaVel10min = MediaVel10min + MediaVel1min; // Se acumulan valores de la media de la veleta de 1 minuto para calcular la media de 10 minutos
     MediaVel1min = 0; // Se reinicia la media de la veleta de 1 minuto
     // ------------ BME280 ---------------
-    EnviarMediaAne1min == true;
+    EnviarMediaAne1min = true;
   }
   if (CuentaAne1min == 10){ // Cuando la cuenta del anemómetro de 1 minuto llega a 10, es decir, a 10 minutos...
     // ------------ Anemómetro ---------------
