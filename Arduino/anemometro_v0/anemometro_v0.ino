@@ -1,6 +1,6 @@
 #include <DS3231.h>
 DS3231 clock;
-RTCDateTime dt;
+//RTCDateTime dt;
 #include <TimerOne.h>
 #include <Wire.h>
 #include "SparkFunBME280.h"

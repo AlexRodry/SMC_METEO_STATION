@@ -46,7 +46,7 @@ void setup() {
   attachInterrupt(1, Plu, RISING); // Asigna la interrupción 1 (pin D3) a la función Plu cuando detecta un flanco de subida
   Wire.begin();
   clock.begin();
-  clock.setDateTime(2019,05,19,10,48,00);
+  clock.setDateTime(2019,06,18,20,41,00);
   if (mySensor.beginI2C() == false) //Begin communication over I2C
   {
     Serial.println("The sensor did not respond. Please check wiring.");
