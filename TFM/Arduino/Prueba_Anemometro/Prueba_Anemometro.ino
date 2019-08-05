@@ -9,7 +9,7 @@ float Velcte  = 2.4;                  // km/h x rev
 void setup() { 
 Serial.begin(9600); 
 pinMode(AnemPin, INPUT); 
-attachInterrupt(digitalPinToInterrupt(AnemPin), rot_count, FALLING); 
+attachInterrupt(digitalPinToInterrupt(AnemPin), rot_count, RISING); 
 Serial.println("Test de Anemómetro"); 
 Serial.println("Giros\tkm/h"); 
 } 
