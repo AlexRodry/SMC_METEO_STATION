@@ -3,6 +3,14 @@
 
 RTC_DS3231 rtc;       // Declaramos un RTC DS3231
 
+ String dia;
+int mes;
+ int ano;
+ int hora;
+ int minuto;
+ int segundo;
+ String fecha;
+
 void setup() {
  Serial.begin(9600);
  delay(3000);
@@ -16,8 +24,19 @@ void setup() {
  rtc.adjust(DateTime(F(__DATE__), F(__TIME__)));
 }
 
-void loop() {
+void loop() { 
  DateTime now = rtc.now();
+ 
+ dia = now.day();
+ mes = now.month();
+ ano = now.year();
+ hora = now.hour();
+ minuto = now.minute();
+ segundo = now.second();
+ fecha = (dia + '-' + mes + '-' + ano + ' ' + hora + ':' + minuto + ':' + segundo);
+ Serial.println(fecha);
+ delay(3000);
+ /*DateTime now = rtc.now();
  Serial.print(now.day());
  Serial.print('/');
  Serial.print(now.month());
@@ -31,4 +50,5 @@ void loop() {
  Serial.print(now.second());
  Serial.println();
  delay(3000);
+ */
 }
