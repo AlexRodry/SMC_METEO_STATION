@@ -21,7 +21,7 @@ void loop() {
   
   // Convierto a String las medidas y las represento concatenando su unidad
   
-  hum   = String(mySensor.readFloatHumidity(), 0);
+  hum   = String(mySensor.readFloatHumidity(), 2);
   pres  = String(mySensor.readFloatPressure(), 0);
   temp  = String(mySensor.readTempC(), 2);
   Serial.println("Midiendo...");

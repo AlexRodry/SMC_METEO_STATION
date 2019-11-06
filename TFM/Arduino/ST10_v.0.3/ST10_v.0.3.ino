@@ -1,37 +1,60 @@
 /*Librerias*/
 //--Sensor BME280
-#include "SparkFunBME280.h" //Librería del sensor
-BME280 mySensor;
+#include "SparkFunBME280.h" // Librería del sensor
+  BME280 mySensor;
+//--Reloj RTC
+#include <RTClib.h>         // Libreria del reloj RTC
+  RTC_DS3231 rtc;       
 //--Comunicacion i2C
-#include <Wire.h>           //Comunicación I2C
+#include <Wire.h>           // Comunicación I2C
 
 /*Variables*/
 // Strings de medida BME280
 String hum;
 String pres;
 String temp;
+String counts[1];
 // String anemometro
 String velo;
 #define AnemPin (2)                   // Pin del Anemómetro
-/*Puenteo de interrupciones*/
-int pinAnemInt = 7;
-boolean valor;
+// String pluviometro
+String pluvio;
+#define PluvioPin (3)                 // Pin del Anemómetro
+// String Veleta
+const int VelPin = A1;                // Seleccionar la entrada para el sensor
+int sensorValue;                      // Variable que almacena el valor raw (0 a 1023)
+String veleta;                        // Dirección que marca la veleta 
+// String Reloj
+String fecha;
 
 void setup() {
   Serial.begin(9600);
-  pinMode(pinAnemInt,OUTPUT);
   pinMode(AnemPin,INPUT);
-  attachInterrupt(AnemPin, rot_count, RISING); // Asigna la interrupción 0 (pin D2) a la función Ane cuando detecta un flanco de subida  
-  if (mySensor.beginI2C() == false) //Comienzo de la comunciación I2C
+  pinMode(PluvioPin,INPUT);
+  pinMode(VelPin,INPUT);
+  attachInterrupt(digitalPinToInterrupt(AnemPin), rot_count, RISING);
+  attachInterrupt(digitalPinToInterrupt(PluvioPin), pluv_count, RISING);  
+  if (! mySensor.beginI2C() || ! rtc.begin())//Comienzo de la comunciación I2C
   {
-    Serial.println("The sensor did not respond. Please check wiring.");
+    Serial.println("The sensors did not respond. Please check wiring.");
     while(1); //Freeze
   }
+  rtc.adjust(DateTime(F(__DATE__), F(__TIME__)));
 }
 
 void loop() {
-
-  velo = anem();
+  ticks();
+  veleta  = direcc();
+  hum     = String(mySensor.readFloatHumidity(), 0);
+  pres    = String(mySensor.readFloatPressure(), 0);
+  temp    = String(mySensor.readTempC(), 2);
+  fecha   = funFecha();
   Serial.println(velo);
-
+  Serial.println(pluvio);
+  Serial.println(veleta);
+  Serial.println(hum);
+  Serial.println(pres);
+  Serial.println(temp);
+  Serial.println(fecha);
+  delay(200);
 }
