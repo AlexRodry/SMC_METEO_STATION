@@ -27,7 +27,7 @@ String veleta;                        // Dirección que marca la veleta
 String fecha;
 
 void setup() {
-  Serial.begin(9600);
+  Serial.begin(115200);
   pinMode(AnemPin,INPUT);
   pinMode(PluvioPin,INPUT);
   pinMode(VelPin,INPUT);

@@ -11,6 +11,7 @@ def cad_proc(cad):
 		j = json.loads(cad)
 		fecha = j["Dato"][0]["Fecha"]
 		tipo = j["Dato"][1]["Tipo"]
+		print(tipo)
 		if tipo == "1":
 			rango = [0] 
 		elif tipo == "2":
@@ -21,12 +22,13 @@ def cad_proc(cad):
 			rango = [0, 1, 2, 3]
 		elif tipo == "5":
 			rango = [0, 1, 2, 3, 4]
-		else:
+		elif tipo == "6":
 			rango = [0, 1, 2, 3, 4, 5]
 		for i in rango:
 			sensor = j["sensores"][i]["id"]
 			value = j["sensores"][i]["valor"]
 			send_mysql(fecha,sensor,value)   
+			print(i)
 	except:  # includes simplejson.decoder.JSONDecodeError
 		print 'Telegrama JSON no recibido'
 
@@ -44,5 +46,6 @@ def send_mysql(fecha_,sensor_,value_):
 
 while True:
 	line = lora.readline()
+	print(line)
 	cad_proc(line)
 lora.close() #Finalizamos la comunicacionarduino

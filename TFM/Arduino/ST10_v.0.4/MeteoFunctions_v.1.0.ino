@@ -59,28 +59,28 @@ String direcc()
   sensorValue = analogRead(VelPin);
   int a = sensorValue;
   if ((a>=225)&&(a<=400)){
-    return "N";
+    return "0";
   }
   else if ((a>=501)&&(a<=675)){
-    return "NE";
+    return "45";
   }
   else if ((a>=676)&&(a<=800)){
-    return "S";
+    return "180";
   }
   else if ((a>=801)&&(a<=895)){
-    return "SE";
+    return "135";
   }
   else if (a>=895){
-    return "E";
+    return "90";
   }
   else if ((a>=401)&&(a<=500)){
-    return "SO";
+    return "225";
   }
   else if (a<=140){
-    return "O";
+    return "270";
   }
   else if ((a>=141)&&(a<=224)){
-    return "NO";
+    return "315";
   }
 }
 /*----- RELOJ -----*/
