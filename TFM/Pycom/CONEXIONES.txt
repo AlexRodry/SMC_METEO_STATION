@@ -1,0 +1,1 @@
+Pycom, Pycom Ltd., FTDI, Microsoft, Microchip Technology\, Inc.
