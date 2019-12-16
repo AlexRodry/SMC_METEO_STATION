@@ -25,15 +25,24 @@ const int VelPin = A1;                // Seleccionar la entrada para el sensor
 String veleta;                        // Dirección que marca la veleta 
 // String Reloj
 String fecha;
+// Handshake Lopy
+int hsControl = 1;
+int HSinput   = 7;
+int HSoutput  = 8;
+
 
 void setup() {
-  Serial.begin(9600);
-  pinMode(AnemPin,INPUT);
-  pinMode(PluvioPin,INPUT);
-  pinMode(VelPin,INPUT);
+  Serial.begin(9600);         // Comunicacion serial
+  pinMode(AnemPin,INPUT);       // Anemometro
+  pinMode(PluvioPin,INPUT);     // Pluviometro
+  pinMode(VelPin,INPUT);        // Veleta
+  pinMode(HSinput,INPUT);       // Input handshake
+  pinMode(HSoutput,OUTPUT);     // Output handshake
+  // Configuracion interrupciones
   attachInterrupt(digitalPinToInterrupt(AnemPin), rot_count, RISING);
-  attachInterrupt(digitalPinToInterrupt(PluvioPin), pluv_count, RISING);  
-  if (! mySensor.beginI2C() || ! rtc.begin())//Comienzo de la comunciación I2C
+  attachInterrupt(digitalPinToInterrupt(PluvioPin), pluv_count, RISING); 
+  // Diagnosis i2C 
+  if (! mySensor.beginI2C() || ! rtc.begin())
   {
     Serial.println("The sensors did not respond. Please check wiring.");
     while(1); //Freeze
@@ -49,6 +58,19 @@ void loop() {
   temp    = String(mySensor.readTempC(), 2);
   fecha   = funFecha();
 
-  delay(200);
-  json_telegram();
+  if (hsControl == 1){
+    digitalWrite(HSoutput, HIGH);
+    json_telegram();
+    delay(500);
+    digitalWrite(HSoutput, LOW); 
+    if (digitalRead(HSinput) == HIGH){
+      Serial.println("Caso 1 a 2");
+      hsControl = 2; 
+    }
+  }
+  else if (hsControl == 2){
+    if (digitalRead(HSinput) == LOW){
+      hsControl = 1; 
+    }
+  }
 }

@@ -8,7 +8,7 @@ uart = machine.UART(0, 115200)
 os.dupterm(uart)
 
 # Configure second UART bus on pins P3(TX1) and P4(RX1)
-uart1 = machine.UART(1, baudrate=9600, pins=('P11','P10'), timeout_chars=5000)
+uart1 = machine.UART(1, baudrate=115200, pins=('P11','P10'))
 
 pycom.heartbeat(False)
 

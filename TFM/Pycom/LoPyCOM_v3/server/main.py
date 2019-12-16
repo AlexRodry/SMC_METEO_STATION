@@ -8,19 +8,20 @@ import time
 # Europe = LoRa.EU868
 # United States = LoRa.US915
 
-print('Main start 1')
-
+uart = UART(1, baudrate=115200)
 lora = LoRa(mode=LoRa.LORA, region=LoRa.EU868)
 s = socket.socket(socket.AF_LORA, socket.SOCK_RAW)
 s.setblocking(False)
+print("Conexion establecida")
+
 
 while True:
-	try:
-		msg = uart1.readline()
-		if msg != None:
-			s.send(msg)
-			print('msg enviado')
-			print(msg)
-			time.sleep(5)
-	except Exception as e:
-		s.send("Error en emisor Lora ignorado")
+    try:
+        loraread = s.recv(1024)
+        msg = loraread.decode("utf-8")
+        if loraread != None:
+            uart.write(msg)
+            print(msg)
+        time.sleep(5)
+    except Exception as e:
+        print("Error ignorado")
