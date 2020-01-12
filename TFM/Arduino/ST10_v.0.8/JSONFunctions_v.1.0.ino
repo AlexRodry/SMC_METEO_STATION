@@ -6,7 +6,7 @@ void json_telegram(){
   StaticJsonBuffer<4500> jsonBuffer;
   JsonObject& json = jsonBuffer.createObject();
   
-  json["nombre"] = "ST10";
+  json["nombre"] = "ST01";
   
   JsonObject& s1 = jsonBuffer.createObject();// Fecha del dato
   
@@ -44,6 +44,10 @@ void json_telegram(){
   JsonObject& s8 = jsonBuffer.createObject(); // Lluvia
   s8["id"] = "6";
   s8["valor"] = String(pluvio);
+
+  JsonObject& s9 = jsonBuffer.createObject(); // Rssi a reemplazar
+  s9["id"] = "10";
+  s9["valor"] = "rssi";
   
   JsonArray& datosS = json.createNestedArray("sensores");
   datosS.add(s3);
@@ -52,6 +56,7 @@ void json_telegram(){
   datosS.add(s6);
   datosS.add(s7);
   datosS.add(s8);
+  datosS.add(s9);
   json.printTo(Serial);
   delay(50);
   Serial.println();

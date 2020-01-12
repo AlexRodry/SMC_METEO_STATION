@@ -15,7 +15,7 @@ s = socket.socket(socket.AF_LORA, socket.SOCK_RAW)
 s.setblocking(False)
 
 while True:
-	try:
+	try:	
 		msg = uart1.readline()
 		if msg != None:
 			s.send(msg)

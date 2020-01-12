@@ -4,7 +4,7 @@
 /*Declaracion de variables*/
 // Contador
 volatile int ms500Counter   = 0;                // Contador
-volatile float timeSeg      = 60;               // Tiempo en segundos de envío
+volatile float timeSeg      = 10;               // Tiempo en segundos de envío
 volatile int maxCount       = int(timeSeg*2);   // Contador nº interrupciones
 //Anemometro
 volatile unsigned long Rots = 0;        // Contador nº de giros
@@ -36,8 +36,8 @@ String _fecha;
 void ticks(){
   ms500Counter++;
   if (ms500Counter == maxCount){
-    velo   = String((Rots * Velcte)/(timeSeg*0.001));
-    pluvio = String((Pluvs * Raincte)/(timeSeg/1000));
+    velo   = String((Rots * Velcte)/(2*timeSeg));
+    pluvio = String((Pluvs * Raincte)/(timeSeg));
     ms500Counter = 0;
     veleta  = direcc();
     readyToSend = true;

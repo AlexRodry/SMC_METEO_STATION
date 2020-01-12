@@ -34,7 +34,8 @@ bool readyToSend = false;
 
 
 void setup() {
-  Serial.begin(9600);                 // Comunicacion serial
+  Serial.begin(57600);                // Comunicacion serial
+  Serial.println("In");
   Timer1.initialize(500000);          // Activación del timer 1 cada 500ms
   Timer1.attachInterrupt(ticks);      // Salta la función tiempo_ane a la frecuencia indicada antes
   pinMode(AnemPin,INPUT);             // Anemometro
@@ -50,6 +51,9 @@ void setup() {
   {
     Serial.println("The sensors did not respond. Please check wiring.");
     while(1); //Freeze
+  }
+  else{
+    Serial.println("i2C OK");
   }
   rtc.adjust(DateTime(F(__DATE__), F(__TIME__)));
 }
