@@ -74,7 +74,7 @@ void loop() {
     fecha   = funFecha(); 
     
     delay(50);
-    SerialTelegram = "Nombre"+Sep+St+Sep+ "Fecha"+Sep+fecha+Sep +ids[0]+Sep+sens[0]+Sep +ids[1]+Sep+sens[1]+Sep +ids[2]+Sep+sens[2]+Sep +ids[3]+Sep+sens[3]+Sep +ids[4]+Sep+sens[4]+Sep +ids[5]+Sep+sens[5]+Sep +ids[6]+Sep+sens[6]+Sep;
+    SerialTelegram = "nombre"+Sep+St+Sep+ "Fecha"+Sep+fecha+Sep +ids[0]+Sep+sens[0]+Sep +ids[1]+Sep+sens[1]+Sep +ids[2]+Sep+sens[2]+Sep +ids[3]+Sep+sens[3]+Sep +ids[4]+Sep+sens[4]+Sep +ids[5]+Sep+sens[5]+Sep +ids[6]+Sep+sens[6]+Sep;
     Serial.println(SerialTelegram);
     readyToSend = false;
   }
