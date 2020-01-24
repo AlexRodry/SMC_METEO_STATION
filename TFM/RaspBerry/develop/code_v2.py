@@ -36,7 +36,7 @@ def cad_proc(cad):
             pluvio = j["sensores"][5]["valor"]
             rssi = j["sensores"][6]["valor"]           
             cursor = cnx.cursor()
-            query = "Insert into datos (station, stime, loctime, samplfreq, temperatura, humedad, presion, lluvia, direccion_viento, velocidad_viento,  rssi) VALUES (" +  "\'" + st + "\'" + "," + "\'"+ stdtime + "\'" + "," + "\'"+ loctime + "\'"+ "," + "\'"+ samplefreq  + "\'"+ "," + "\'"+ temperatura + "\'"+ "," + "\'"+ humedad + "\'"+ ","+ "\'"+ presion + "\'"+ ","+ "\'"+ lluvia + "\'"+ ","+ "\'"+ dir_viento + "\'"+ ","+ "\'"+ vel_viento+ "\'"+ ","+ "\'"+ rssi + "\'"+ ");"
+            query = "Insert into datos (station, stime, loctime, samplfreq, temperatura, humedad, presion, lluvia, direccion_viento, velocidad_viento,  rssi) VALUES (" +  "\'" + st + "\'" + "," + "\'"+ stdtime + "\'" + "," + "\'"+ loctime + "\'"+ "," + "\'"+ samplefreq  + "\'"+ "," + "\'"+ temperatura + "\'"+ "," + "\'"+ humedad + "\'"+ ","+ "\'"+ presion + "\'"+ ","+ "\'"+ pluvio + "\'"+ ","+ "\'"+ dir_viento + "\'"+ ","+ "\'"+ vel_viento+ "\'"+ ","+ "\'"+ rssi + "\'"+ ");"
             #INSERT INTO `datos` (`stime`, `loctime`, `samplfreq`, `temperatura`, `humedad`, `presion`, `lluvia`, `direccion_viento`, `velocidad_viento`, `rssi`) VALUES (NULL, '2020-01-15 00:00:00', '2020-01-16 00:00:00', '300', '27.5', '45', '96500', '0.00', '90', '0.00', '-57');
             print("Query to DataBase: ")
             print(query)
