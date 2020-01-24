@@ -92,7 +92,7 @@ String direcc()
 String funFecha(){
   
   DateTime now = rtc.now();
-
+/*
   dia = now.day();
   if (dia.length() < 2){
     dia = "0" + dia;
@@ -115,6 +115,6 @@ String funFecha(){
     segundo = "0" + segundo;
   }
   _fecha = ano + mes + dia + hora + minuto + segundo;
-   
-   return _fecha;
+  */ 
+   return now;
 }

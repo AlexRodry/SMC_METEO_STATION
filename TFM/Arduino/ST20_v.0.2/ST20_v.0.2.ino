@@ -30,7 +30,7 @@ void setup() {
 void loop() {    
  if (readyToSend == true){
     delay(50);
-    SerialTelegram = "Nombre"+Sep+St+Sep+ "Fecha"+Sep+fecha+Sep +ids[0]+Sep+sens[0]+Sep +ids[1]+Sep+sens[1]+Sep;
+    SerialTelegram = "nombre"+Sep+St+Sep+ "Fecha"+Sep+fecha+Sep +ids[0]+Sep+sens[0]+Sep +ids[1]+Sep+sens[1]+Sep;
     Serial.println(SerialTelegram);
     readyToSend = false;
   }

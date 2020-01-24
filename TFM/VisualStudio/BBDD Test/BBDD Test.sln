@@ -1,0 +1,23 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio 15
+VisualStudioVersion = 15.0.28010.2036
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{888888A0-9F3D-457C-B088-3A5042F75D52}") = "BBDD Test", "BBDD Test\BBDD Test.pyproj", "{FBB12FA8-3E19-4919-9C8D-679C1AF67491}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{FBB12FA8-3E19-4919-9C8D-679C1AF67491}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{FBB12FA8-3E19-4919-9C8D-679C1AF67491}.Release|Any CPU.ActiveCfg = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {C6AFAE7E-82A4-4957-B3E0-A9E4EFE3E86C}
+	EndGlobalSection
+EndGlobal
