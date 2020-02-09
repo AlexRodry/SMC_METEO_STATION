@@ -21,17 +21,13 @@ def cad_proc(cad):
         stdtime = formatDate(fecha)
         now = datetime.now()
         loctime = now.strftime('%Y-%m-%d %H:%M:%S')
-        # samplefreq = "300"
+        samplefreq = "300"
         tipo = j["Dato"][1]["Tipo"]
         localizacion = "CAT URJC"
         cnx = mysql.connector.connect(user='URJC_Estacion', password='SMC2019',
                                 host='localhost',
                                 database='WeatherStation')
         if st == "ST01":
-            finSt01 = datetime.now()
-            tSt01 = finSt01 - inSt01
-            samplefreq = tSt01.seconds
-            inSt01 = datetime.now()
             humedad = j["sensores"][0]["valor"]
             presion = j["sensores"][1]["valor"]
             temperatura = j["sensores"][2]["valor"]
@@ -49,10 +45,6 @@ def cad_proc(cad):
             cursor.close()
             cnx.close()
         elif st == "ST02":
-            finSt02 = datetime.now()
-            tSt02 = finSt02 - inSt02
-            samplefreq = tSt02.seconds
-            inSt02 = datetime.now()
             temperatura = j["sensores"][0]["valor"]
             rssi = j["sensores"][1]["valor"]
             cursor = cnx.cursor()
@@ -68,15 +60,8 @@ def cad_proc(cad):
         print('JSON not parsed, there is an error in the telegram')
     except(mysql.connector.errors.ProgrammingError):
         print('Error in SQL Syntax')
-    except(UnboundLocalError):
-        if st == "ST01":
-            print('Station 01 Initialized')
-            inSt01 = datetime.now()
-            print(inSt01)
-        else:
-            print('Station 02 Initialized')
-            inSt02 = datetime.now()
-            print(inSt02)
+
+
 
 def DcodetoJSON(Ecodemsg):
     # Function to decode a msg into a vslid json, it is neccesary json library
@@ -119,4 +104,4 @@ while True:
         msg = DcodetoJSON(line)
         cad_proc(msg)
 
-lora.close()
+lora.close() #Finalizamos la comunicacionarduino

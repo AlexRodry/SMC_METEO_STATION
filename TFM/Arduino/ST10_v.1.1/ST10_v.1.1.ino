@@ -26,23 +26,20 @@ const int VelPin = A1;                // Seleccionar la entrada para el sensor
 String veleta;                        // Dirección que marca la veleta 
 // String Reloj
 String fecha;
-// Handshake Lopy
-int hsControl = 1;
-int HSinput   = 7;
-int HSoutput  = 8;
+
 volatile bool readyToSend = false;
 
 String ids[] = {"1", "2", "3", "4", "5", "6", "10"};
 String sens[] = {hum, pres, temp, veleta, velo, pluvio, "rssi"};
 int nids = 7;
-String SerialTelegram;
+
 String Sep = "|";
 String St = "ST01";
-
+String SerialTelegram;
 
 
 void setup() {
-  Serial.begin(9600);                // Comunicacion serial
+  Serial.begin(9600);                 // Comunicacion serial
   Timer1.initialize(500000);          // Activación del timer 1 cada 500ms
   Timer1.attachInterrupt(ticks);      // Salta la función tiempo_ane a la frecuencia indicada antes
   pinMode(AnemPin,INPUT);             // Anemometro
@@ -73,31 +70,9 @@ void loop() {
     fecha   = funFecha(); 
     
     delay(50);   
-    SerialTelegram = "nombre"+Sep+St+Sep+ "Fecha"+Sep+fecha+Sep;    
-    /*
-    SerialTelegram += ids[0]+Sep+sens[0]+Sep +ids[1]+Sep+sens[1]+Sep;
-    SerialTelegram += ids[2]+Sep+sens[2]+Sep +ids[3]+Sep+sens[3]+Sep;
-    SerialTelegram += ids[4]+Sep+sens[4]+Sep +ids[5]+Sep+sens[5]+Sep;
-    SerialTelegram += ids[6]+Sep+sens[6]+Sep;
-    */
-    for (int i=0; i<=6; i++){
-      SerialTelegram += ids[i]+Sep+sens[i]+Sep;
-    }
-    
-    //SerialTelegram = encodeTelegram();
+
+    SerialTelegram = encodeTelegram();
     Serial.println(SerialTelegram);
     readyToSend = false;
   }
 }
-
-/*
-int i;
-String enc_telegram(){
-  fecha = String(fecha);
-  SerialTelegram = "Nombre"+Sep+St+Sep+ "Fecha"+Sep+fecha+Sep;
-  for (i = 1; i >= 6; i++){
-    SerialTelegram = String(SerialTelegram + ids[i]+Sep+sens[i]+Sep);
-  }
-  Serial.println(SerialTelegram);
-}
-*/

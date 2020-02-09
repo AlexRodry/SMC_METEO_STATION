@@ -14,15 +14,16 @@ lora = LoRa(mode=LoRa.LORA, region=LoRa.EU868)
 s = socket.socket(socket.AF_LORA, socket.SOCK_RAW)
 s.setblocking(False)
 
+# Waiting time
+waitTime = 200
 # station 01
 handshake = "ST01"
 # station 02
-#handshake = "ST02"
+# handshake = "ST02"
 readyToSend = False
 
 while True:
 	try:
-		time.sleep(1.5)
 		msg = uart1.readline()
 		loraread = s.recv(1024)
 
@@ -41,8 +42,8 @@ while True:
 			print('msg enviado')
 			print(msg)
 			readyToSend = False
-			time.sleep(5)
+			time.sleep(waitTime)
 
 	except Exception as e:
 		s.send("Error en emisor Lora ignorado: "+handshake)
-		print("Error en emisor Lora") 
+		print("Error en emisor Lora")

@@ -13,5 +13,5 @@ uart1 = machine.UART(1, baudrate=9600, pins=('P11','P10'))
 
 pycom.heartbeat(False)
 
-machine.main('Test.py')
+machine.main('main.py')
 print('==========Starting main.py==========\n')

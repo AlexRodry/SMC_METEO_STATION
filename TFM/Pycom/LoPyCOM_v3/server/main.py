@@ -13,14 +13,15 @@ lora = LoRa(mode=LoRa.LORA, region=LoRa.EU868)
 s = socket.socket(socket.AF_LORA, socket.SOCK_RAW)
 s.setblocking(False)
 print("Conexion establecida")
+maxTimOut = 5   # Maximum iterations to the same ST
+stations = ("ST01","ST02") # Stations to request
+waitTime = 50
+
 request = 0
-stations = ("ST01","ST02")
 nstations = len(stations)
 timOut = 0
-maxTimOut = 5
 while True:
     try:
-        time.sleep(1.0)
         s.send(stations[request])
         print(stations[request])
 
@@ -50,6 +51,8 @@ while True:
                 else:
                     request = request + 1
             time.sleep(10)
+
+        time.sleep(waitTime)
 
     except Exception as e:
         print("Error ignorado en receptor")
