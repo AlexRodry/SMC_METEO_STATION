@@ -46,7 +46,7 @@ volatile bool readyToSend = false;
 String SerialTelegram;
 
 void setup() {
-  Serial.begin(9600);                 // Comunicacion serial
+  Serial.begin(9600);                 // Velocidad comunicacion serial
   Timer1.initialize(500000);          // Activación del timer 1 cada 500ms
   Timer1.attachInterrupt(ticks);      // Salta la función ticks a la frecuencia indicada antes
   pinMode(AnemPin,INPUT);             // Anemometro
@@ -69,7 +69,7 @@ void setup() {
 }
 
 void loop() {
-  // Espera hasta que esten todas las variables medidias
+  /* Espera hasta que esten todas las variables medidias */
   if (readyToSend == true){
     /* Cálculo de la humedad, presión y temperatura instantánea */
     sens[0] = String(mySensor.readFloatHumidity(), 0);

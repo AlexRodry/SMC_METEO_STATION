@@ -3,7 +3,7 @@
 /*..................................................................................*/
 /*Declaracion de variables*/
 //Contador
-volatile int ms500Counter   = 0;        // Contador
+volatile int ms500Counter = 0;          // Contador
 volatile int maxCount = int(timeSeg*2); // Contador nº interrupciones
 //Anemometro
 volatile unsigned long Rots = 0;        // Contador nº de contactos anemómetro
@@ -31,7 +31,7 @@ void ticks(){
   if (ms500Counter == maxCount){
     /* Calculo de la velocidad del viento teniendo en cuenta
        el número de interrupciones que se han dado */
-    sens[4] = String((Rots * Velcte)/(2*timeSeg));
+    sens[4] = String((Rots * Velcte)/(timeSeg));
     /* Calculo de la precipitación teniendo en cuenta
        el número de interrupciones que se han dado */
     sens[5] = String((Pluvs * Raincte)/(timeSeg));

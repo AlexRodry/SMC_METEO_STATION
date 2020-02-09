@@ -70,13 +70,10 @@ def cad_proc(cad):
         print('Error in SQL Syntax')
     except(UnboundLocalError):
         if st == "ST01":
-            print('Station 01 Initialized')
-            inSt01 = datetime.now()
-            print(inSt01)
+            print('Station 01 Frequency time error')
         else:
-            print('Station 02 Initialized')
-            inSt02 = datetime.now()
-            print(inSt02)
+            print('Station 02 Frequency time error')
+
 
 def DcodetoJSON(Ecodemsg):
     # Function to decode a msg into a vslid json, it is neccesary json library
@@ -109,6 +106,11 @@ def DcodetoJSON(Ecodemsg):
         return jsonTelegram
     except:  # includes simplejson.decoder.JSONDecodeError
         print(Ecodemsg+" - Error in decoding process")
+
+inSt01 = datetime.now()
+inSt02 = datetime.now()
+print('SW Initialized at: ')
+print(inSt01)
 
 while True:
     line = lora.readline()

@@ -1,17 +1,16 @@
+# Librerías
 import os
 import machine
 import pycom
 
-
-# Configure first UART bus to see the communication on the pc
+# Configuración primer puerto serie para conexión con el PC
 uart = machine.UART(0, 115200)
 os.dupterm(uart)
-
-# Configure second UART bus on pins P3(TX1) and P4(RX1)
-#uart1 = machine.UART(1, baudrate=9600, pins=('P11','P10'), timeout_chars=5000)
+# Configuración segundo puerto serie para conexión con Arduino
+# Se empleará P11 como TX y P10 como RX
 uart1 = machine.UART(1, baudrate=9600, pins=('P11','P10'))
-
+# Desactivación del Led para reducir el consumo
 pycom.heartbeat(False)
-
+# Configuración del programa principal
 machine.main('main.py')
 print('==========Starting main.py==========\n')
