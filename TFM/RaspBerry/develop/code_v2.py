@@ -21,17 +21,13 @@ def cad_proc(cad):
         stdtime = formatDate(fecha)
         now = datetime.now()
         loctime = now.strftime('%Y-%m-%d %H:%M:%S')
-        # samplefreq = "300"
+        samplefreq = "180"
         tipo = j["Dato"][1]["Tipo"]
         localizacion = "CAT URJC"
         cnx = mysql.connector.connect(user='URJC_Estacion', password='SMC2019',
                                 host='localhost',
                                 database='WeatherStation')
         if st == "ST01":
-            finSt01 = datetime.now()
-            tSt01 = finSt01 - inSt01
-            samplefreq = tSt01.seconds
-            inSt01 = datetime.now()
             humedad = j["sensores"][0]["valor"]
             presion = j["sensores"][1]["valor"]
             temperatura = j["sensores"][2]["valor"]
@@ -49,14 +45,12 @@ def cad_proc(cad):
             cursor.close()
             cnx.close()
         elif st == "ST02":
-            finSt02 = datetime.now()
-            tSt02 = finSt02 - inSt02
-            samplefreq = tSt02.seconds
-            inSt02 = datetime.now()
-            temperatura = j["sensores"][0]["valor"]
-            rssi = j["sensores"][1]["valor"]
+            humedad = j["sensores"][0]["valor"]
+            presion = j["sensores"][1]["valor"]
+            temperatura = j["sensores"][2]["valor"]
+            rssi = j["sensores"][3]["valor"]
             cursor = cnx.cursor()
-            query = "Insert into datos (station, stime, loctime, samplfreq, temperatura, rssi) VALUES (" +  "\'" + st + "\'" + "," + "\'"+ stdtime + "\'" + "," + "\'"+ loctime + "\'"+ "," + "\'"+ samplefreq  + "\'" + ","+ "\'"+ temperatura + "\'"+ ","+ "\'"+ rssi + "\'"+ ");"
+            query = "Insert into datos (station, stime, loctime, samplfreq, temperatura, humedad, presion, rssi) VALUES (" +  "\'" + st + "\'" + "," + "\'"+ stdtime + "\'" + "," + "\'"+ loctime + "\'"+ "," + "\'"+ samplefreq  + "\'" + ","+ "\'"+ temperatura + "\'"+ "," + "\'"+ humedad + "\'"+ ","+ "\'"+ presion + "\'"+ ","+ "\'"+ rssi + "\'"+ ");"
             print("Query to DataBase: ")
             print(query)
             cursor.execute(query)
@@ -107,18 +101,19 @@ def DcodetoJSON(Ecodemsg):
     except:  # includes simplejson.decoder.JSONDecodeError
         print(Ecodemsg+" - Error in decoding process")
 
-inSt01 = datetime.now()
-inSt02 = datetime.now()
-print('SW Initialized at: ')
-print(inSt01)
 
+print('SW Initialized at: ')
+print(datetime.now())
 while True:
     line = lora.readline()
     print("Reading...")
     print(line)
     if len(line) > 7:
-        print(line)
-        msg = DcodetoJSON(line)
-        cad_proc(msg)
+        if "tx_time_on_air" in line:
+            print("Parametros Lora:")
+            print(line)
+        elif "nombre" in line:
+            msg = DcodetoJSON(line)
+            cad_proc(msg)
 
 lora.close()

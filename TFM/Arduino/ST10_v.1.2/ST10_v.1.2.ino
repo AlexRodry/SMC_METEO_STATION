@@ -3,7 +3,7 @@
 /*..................................................................................*/
 /*Librerias*/
 //--Librería del sensor BME280
-#include "SparkFunBME280.h" /
+#include "SparkFunBME280.h"
   BME280 mySensor;
 //--Libreria del reloj RTC
 #include <RTClib.h>          
@@ -26,7 +26,7 @@ String sens[7] = {"hum", "pres", "temp", "veleta", "velo", "pluvio", "rssi"};
 int nids = 7;                         // Número de sensores + rssi
 String Sep = "|";                     // Separador empleado en el telegrama
 String St = "ST01";                   // Nombre de la estación
-volatile float timeSeg = 10;          // Tiempo en segundos entre envío de datos
+volatile float timeSeg = 180;         // Tiempo en segundos entre envío de datos
 float Velcte = 2.4;                   // km/h x contacto del anemómetro
 float Raincte = 0.2794;               // mm de precipitación x contacto pluviómetro
 // Filtro anti-rebotes por software
